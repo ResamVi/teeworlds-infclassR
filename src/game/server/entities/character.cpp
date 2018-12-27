@@ -1814,7 +1814,7 @@ void CCharacter::Tick()
 		else
 		{
 			vec2 CursorPos = vec2(m_Input.m_TargetX, m_Input.m_TargetY);
-			
+
 			bool Broadcast = false;
 
 			if(length(CursorPos) > 100.0f)
@@ -1892,6 +1892,13 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
+					case CMapConverter::MENUCLASS_TRICKSTER:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_TRICKSTER))
+						{
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Trickster"), NULL);
+							Broadcast = true;
+						}
+						break;
 				}
 			}
 			
@@ -1908,6 +1915,9 @@ void CCharacter::Tick()
 				int NewClass = -1;
 				switch(m_pPlayer->m_MapMenuItem)
 				{
+					case CMapConverter::MENUCLASS_TRICKSTER:
+						NewClass = PLAYERCLASS_TRICKSTER;
+						break;
 					case CMapConverter::MENUCLASS_MEDIC:
 						NewClass = PLAYERCLASS_MEDIC;
 						break;
@@ -1940,7 +1950,7 @@ void CCharacter::Tick()
 						NewClass = PLAYERCLASS_BIOLOGIST;
 						break;
 				}
-				
+
 				if(NewClass >= 0 && GameServer()->m_pController->IsChoosableClass(NewClass))
 				{
 					m_AntiFireTick = Server()->Tick();
@@ -3040,6 +3050,22 @@ void CCharacter::ClassSpawnAttributes()
 			{
 				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "ninja", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_NINJA] = true;
+			}
+			break;
+		case PLAYERCLASS_TRICKSTER:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_TRICKSTER);
+			if(!m_pPlayer->IsKownClass(PLAYERCLASS_TRICKSTER))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "trickster", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_TRICKSTER] = true;
 			}
 			break;
 		case PLAYERCLASS_NONE:

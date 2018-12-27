@@ -473,6 +473,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_NINJA:
 				case PLAYERCLASS_MERCENARY:
 				case PLAYERCLASS_SNIPER:
+				case PLAYERCLASS_TRICKSTER:
 					Support++;
 					break;
 				case PLAYERCLASS_ENGINEER:
@@ -811,6 +812,9 @@ int CGameControllerMOD::ChooseHumanClass(CPlayer* pPlayer)
 	Probability[PLAYERCLASS_NINJA - START_HUMANCLASS - 1] =
 		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableNinja) ?
 		1.0f : 0.0f;
+	Probability[PLAYERCLASS_TRICKSTER - START_HUMANCLASS - 1] =
+		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableTrickster) ?
+		1.0f : 0.0f;
 
 	Probability[PLAYERCLASS_MEDIC - START_HUMANCLASS - 1] =
 		(nbMedic < g_Config.m_InfMedicLimit && g_Config.m_InfEnableMedic) ?
@@ -913,6 +917,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableMercenary;
 		case PLAYERCLASS_SNIPER:
 			return g_Config.m_InfEnableSniper;
+		case PLAYERCLASS_TRICKSTER:
+			return g_Config.m_InfEnableTrickster;
 		default:
 			return false;
 	}
@@ -936,6 +942,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
+			case PLAYERCLASS_TRICKSTER:
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
@@ -967,6 +974,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_NINJA:
 		case PLAYERCLASS_MERCENARY:
 		case PLAYERCLASS_SNIPER:
+		case PLAYERCLASS_TRICKSTER:
 			return (nbSupport < g_Config.m_InfSupportLimit);
 	}
 	

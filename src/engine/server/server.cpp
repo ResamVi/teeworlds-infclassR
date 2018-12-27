@@ -629,6 +629,7 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_BIOLOGIST_SHOTGUN, 10);
 	
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
+	SetClassAvailability(PLAYERCLASS_TRICKSTER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
 	SetClassAvailability(PLAYERCLASS_MERCENARY, 2);
 	SetClassAvailability(PLAYERCLASS_SNIPER, 2);
@@ -1787,14 +1788,16 @@ int CServer::LoadMap(const char *pMapName)
 		
 		CDataFileReader dfClientMap;
 		//The map is already converted
-		if(dfClientMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL))
+		if(!dfClientMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL))
 		{
+			dbg_msg("DEBUG", "map already converted");
 			m_CurrentMapCrc = dfClientMap.Crc();
 			dfClientMap.Close();
 		}
 		//The map must be converted
 		else
 		{
+			dbg_msg("DEBUG", "map must be converted");
 			char aClientMapDir[256];
 			str_format(aClientMapDir, sizeof(aClientMapDir), "clientmaps/%s_%08x", pMapName, ServerMapCrc);
 			

@@ -169,7 +169,7 @@ int CGameContext::RandomZombieToWitch() {
 
 void CGameContext::SetAvailabilities(std::vector<int> value) {
 	if (value.empty())
-		value = std::vector<int>(9);
+		value = std::vector<int>(10);
 	g_Config.m_InfEnableBiologist = value[0];
 	g_Config.m_InfEnableEngineer = value[1];
 	g_Config.m_InfEnableHero = value[2];
@@ -179,6 +179,7 @@ void CGameContext::SetAvailabilities(std::vector<int> value) {
 	g_Config.m_InfEnableScientist = value[6];
 	g_Config.m_InfEnableSniper = value[7];
 	g_Config.m_InfEnableSoldier = value[8];
+	g_Config.m_InfEnableTrickster = value[9];
 }
 
 void CGameContext::SetProbabilities(std::vector<int> value) {
@@ -634,6 +635,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 	
 	switch(Class)
 	{
+		case PLAYERCLASS_TRICKSTER:
+			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Trickster"));
+			break;
 		case PLAYERCLASS_ENGINEER:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Engineer"));
 			break;
@@ -2576,7 +2580,8 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 		g_Config.m_InfEnableNinja,
 		g_Config.m_InfEnableScientist,
 		g_Config.m_InfEnableSniper,
-		g_Config.m_InfEnableSoldier
+		g_Config.m_InfEnableSoldier,
+		g_Config.m_InfEnableTrickster
 	};
 
 	std::vector<const char*> phrases = {
@@ -2687,6 +2692,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 
 	if(str_comp(pClassName, "engineer") == 0) pPlayer->SetClass(PLAYERCLASS_ENGINEER);
 	else if(str_comp(pClassName, "soldier") == 0) pPlayer->SetClass(PLAYERCLASS_SOLDIER);
+	else if(str_comp(pClassName, "trickster") == 0) pPlayer->SetClass(PLAYERCLASS_TRICKSTER);
 	else if(str_comp(pClassName, "scientist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIENTIST);
 	else if(str_comp(pClassName, "biologist") == 0) pPlayer->SetClass(PLAYERCLASS_BIOLOGIST);
 	else if(str_comp(pClassName, "medic") == 0) pPlayer->SetClass(PLAYERCLASS_MEDIC);
@@ -2871,6 +2877,11 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			{
 				CheckClass = PLAYERCLASS_NINJA;
 				str_copy(aChatTitle, "ninja", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "!trickster") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_TRICKSTER;
+				str_copy(aChatTitle, "trickster", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!mercenary") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
@@ -3358,6 +3369,18 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Bombs are limited to one per player at the same time."), NULL);
 			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
+		else if(str_comp_nocase(pHelpPage, "trickster") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Trickster"), NULL); 
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Trickster can clone himself and block a single zombie hit."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("His clone explodes and stuns after a few seconds."), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Activating his block activity opens a time frame where a hit will not infect him."), NULL);			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "scientist") == 0)

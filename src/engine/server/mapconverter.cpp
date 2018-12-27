@@ -238,7 +238,7 @@ void CMapConverter::AddTeeLayer(const char* pName, int ImageID, vec2 Pos, float 
 {
 	array<CQuad> aQuads;
 	CQuad Quad;
-	
+
 	//Body, Shadow
 	InitQuad(&Quad, Pos+vec2(0.0f, -4.0f), vec2(Size, Size));
 	Quad.m_ColorEnv = Env;
@@ -565,7 +565,8 @@ void CMapConverter::Finalize()
 	int NinjaImageID = AddExternalImage("../skins/x_ninja", 256, 128);
 	int MercenaryImageID = AddExternalImage("../skins/bluestripe", 256, 128);
 	int SniperImageID = AddExternalImage("../skins/warpaint", 256, 128);
-	
+	int TricksterImageID = AddExternalImage("../skins/redbopp", 256, 128);
+
 	//Menu
 	
 	const float MenuRadius = 196.0f;
@@ -583,7 +584,7 @@ void CMapConverter::Finalize()
 			Item.m_OffsetX = 0;
 			Item.m_OffsetY = 0;
 			Item.m_StartLayer = m_NumLayers;
-			Item.m_NumLayers = 11;
+			Item.m_NumLayers = 12;
 			Item.m_UseClipping = 0;
 			Item.m_ClipX = 0;
 			Item.m_ClipY = 0;
@@ -644,6 +645,7 @@ void CMapConverter::Finalize()
 						case MENUCLASS_SOLDIER:
 						case MENUCLASS_SCIENTIST:
 						case MENUCLASS_BIOLOGIST:
+						case MENUCLASS_TRICKSTER:
 							ClassMask = MASK_DEFENDER;
 							break;
 						case MENUCLASS_MEDIC:
@@ -810,6 +812,9 @@ void CMapConverter::Finalize()
 								break;
 							case MENUCLASS_SNIPER:
 								AddTeeLayer("Sniper", SniperImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_TRICKSTER:
+								AddTeeLayer("Trickster", TricksterImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
 						}
 					}
