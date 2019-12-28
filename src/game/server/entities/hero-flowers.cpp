@@ -47,7 +47,6 @@ void CHeroFlowers::Tick()
 		if(p->GetPlayer()->GetClass() == PLAYERCLASS_MEDIC)
 		{
 			float dist = distance(p->m_Pos, m_OwnerPos);
-			dbg_msg("DEBUG", "dist %f", dist);
 
 			// The hero may give his/her medic of choice a bouquet of flowers
 			// Through this display of romance the medic may revive another zombie

@@ -1813,8 +1813,8 @@ void CCharacter::Tick()
 			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are slowed: {sec:EffectDuration}"), "EffectDuration", &SloMoSec, NULL);
 		}
 	}
-
-
+	
+	
 	if(m_HallucinationTick > 0)
 		--m_HallucinationTick;
 	
@@ -2092,7 +2092,7 @@ void CCharacter::Tick()
 	}
 
 	// tarzan-mode
-	/*CPlayer* pHookedPlayer = GameServer()->m_apPlayers[m_Core.m_HookedPlayer];
+	CPlayer* pHookedPlayer = GameServer()->m_apPlayers[m_Core.m_HookedPlayer];
 	if(m_Core.m_HookedPlayer > -1 && pHookedPlayer) {
 		bool BothZombies = IsZombie() && pHookedPlayer->IsZombie();
 		bool BothHumans = IsHuman() && pHookedPlayer->IsHuman();
@@ -2100,7 +2100,7 @@ void CCharacter::Tick()
 		{
 			CoreTickParams.m_HookGrabTime = 999*SERVER_TICK_SPEED;
 		}
-	}*/
+	}
 	//tarzan-mode end
 
 	CoreTickParams.m_HookMode = m_HookMode;
@@ -3361,7 +3361,7 @@ void CCharacter::Snap(int SnappingClient)
 	}
 	
 	// tarzan-mode
-	/*CPlayer* pHookedPlayer = GameServer()->m_apPlayers[m_Core.m_HookedPlayer];
+	CPlayer* pHookedPlayer = GameServer()->m_apPlayers[m_Core.m_HookedPlayer];
 	if(m_Core.m_HookedPlayer > -1 && pHookedPlayer) {
 		bool BothZombies = IsZombie() && pHookedPlayer->IsZombie();
 		bool BothHumans = IsHuman() && pHookedPlayer->IsHuman();
@@ -3371,7 +3371,7 @@ void CCharacter::Snap(int SnappingClient)
 			if(pCharacter->m_HookTick < 0)
 				pCharacter->m_HookTick = 0;
 		}
-	}*/
+	}
 	// tarzan-mode end
 
 /* INFECTION MODIFICATION END *****************************************/
